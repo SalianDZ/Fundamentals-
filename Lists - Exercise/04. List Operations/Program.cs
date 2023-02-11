@@ -18,9 +18,9 @@ while (true)
 	{
 		int number = int.Parse(command[1]);
 		int index = int.Parse(command[2]);
-        if (index > numbers.Count)
+        if (index > numbers.Count - 1)
         {
-			Console.WriteLine("Invalid Index");
+			Console.WriteLine("Invalid index");
 			continue;
         }
         numbers.Insert(index, number);
@@ -29,9 +29,9 @@ while (true)
 	{
 		int index = int.Parse(command[1]);
 
-        if (index > numbers.Count)
+        if (index > numbers.Count - 1)
         {
-            Console.WriteLine("Invalid Index");
+            Console.WriteLine("Invalid index");
             continue;
         }
 		
