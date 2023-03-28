@@ -1,86 +1,83 @@
-﻿Dictionary<string, PieceInfo> pieces = new Dictionary<string, PieceInfo>();
-int n = int.Parse(Console.ReadLine());
+﻿int n = int.Parse(Console.ReadLine());
+Dictionary<string, PieceInformation> pieces = new Dictionary<string, PieceInformation>();
 
 for (int i = 0; i < n; i++)
 {
-    string[] input = Console.ReadLine()
-        .Split("|", StringSplitOptions.RemoveEmptyEntries)
-        .ToArray();
+    string[] currentPiece = Console.ReadLine()
+        .Split("|", StringSplitOptions.RemoveEmptyEntries);
 
-    string currentPiece = input[0];
-    string currentComposer = input[1];
-    string currentKey = input[2];
+    string currentPieceName = currentPiece[0];
 
-    if (!pieces.ContainsKey(currentPiece))
+    if (!pieces.ContainsKey(currentPieceName))
     {
-        pieces[currentPiece] = new PieceInfo(currentComposer, currentKey);
+        string composer = currentPiece[1];
+        string key = currentPiece[2];
+        pieces[currentPieceName] = new PieceInformation(composer, key);
     }
 }
 
 while (true)
 {
-    string[] input = Console.ReadLine()
-        .Split("|", StringSplitOptions.RemoveEmptyEntries)
-        .ToArray();
+    string[] command = Console.ReadLine()
+        .Split("|", StringSplitOptions.RemoveEmptyEntries);
 
-    if (input[0] == "Stop")
+    if (command[0] == "Stop")
     {
         break;
     }
-    else if (input[0] == "Add")
+    else if (command[0] == "Add")
     {
-        string currentPiece = input[1];
-        string currentComposer = input[2];
-        string currentKey = input[3];
-
-        if (pieces.ContainsKey(currentPiece))
+        string pieceName = command[1];
+        string composer = command[2];
+        string key = command[3];
+        if (pieces.ContainsKey(pieceName))   
         {
-            Console.WriteLine($"{currentPiece} is already in the collection!");
+            Console.WriteLine($"{pieceName} is already in the collection!");
             continue;
         }
 
-        pieces[currentPiece] = new PieceInfo(currentComposer, currentKey);
-        Console.WriteLine($"{currentPiece} by {currentComposer} in {currentKey} added to the collection!");
+        pieces[pieceName] = new PieceInformation(composer, key);
+        Console.WriteLine($"{pieceName} by {composer} in {key} added to the collection!");
     }
-    else if (input[0] == "Remove")
+    else if (command[0] == "Remove")
     {
-        string currentPiece = input[1];
+        string pieceName = command[1];
 
-        if (!pieces.ContainsKey(currentPiece))
+        if (pieces.ContainsKey(pieceName))
         {
-            Console.WriteLine($"Invalid operation! {currentPiece} does not exist in the collection.");
-            continue;
-        }
-        pieces.Remove(currentPiece);
-        Console.WriteLine($"Successfully removed {currentPiece}!");
-    }
-    else if (input[0] == "ChangeKey")
-    {
-        string currentPiece = input[1];
-        string currentKey = input[2];
-
-        if (!pieces.ContainsKey(currentPiece))
-        {
-            Console.WriteLine($"Invalid operation! {currentPiece} does not exist in the collection.");
+            pieces.Remove(pieceName);
+            Console.WriteLine($"Successfully removed {pieceName}!");
             continue;
         }
 
-        pieces[currentPiece].Key = currentKey;
-        Console.WriteLine($"Changed the key of {currentPiece} to {currentKey}!");
+        Console.WriteLine($"Invalid operation! {pieceName} does not exist in the collection.");
     }
+    else if (command[0] == "ChangeKey")
+    {
+        string pieceName = command[1];
+        string newKey = command[2];
 
+        if (pieces.ContainsKey(pieceName))
+        {
+            pieces[pieceName].Key = newKey;
+            Console.WriteLine($"Changed the key of {pieceName} to {newKey}!");
+            continue;
+        }
+
+        Console.WriteLine($"Invalid operation! {pieceName} does not exist in the collection.");
+    }
 }
-
-//"{Piece} -> Composer: {composer}, Key: {key}"
 
 foreach (var piece in pieces)
 {
     Console.WriteLine($"{piece.Key} -> Composer: {piece.Value.Composer}, Key: {piece.Value.Key}");
 }
 
-public class PieceInfo
+
+
+class PieceInformation
 {
-    public PieceInfo(string composer, string key)
+    public PieceInformation(string composer, string key)
     {
         Composer = composer;
         Key = key;
@@ -88,5 +85,5 @@ public class PieceInfo
 
     public string Composer { get; set; }
 
-    public string Key { get; set; }
+    public string Key { get; set; }    
 }
