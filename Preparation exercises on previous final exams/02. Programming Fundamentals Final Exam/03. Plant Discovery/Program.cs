@@ -1,118 +1,100 @@
-﻿using System.Security;
-
-Dictionary<string, PlantInfo> plants = new Dictionary<string, PlantInfo>();
+﻿
+Dictionary<string, PlantInformation> plants = new Dictionary<string, PlantInformation>();
 int n = int.Parse(Console.ReadLine());
 
 for (int i = 0; i < n; i++)
 {
-    string[] currentPlantInfo = Console.ReadLine()
-        .Split("<->", StringSplitOptions.RemoveEmptyEntries)
-        .ToArray();
+    string[] currentPlant = Console.ReadLine()
+        .Split("<->", StringSplitOptions.RemoveEmptyEntries);
 
-    string plantName = currentPlantInfo[0];
-    int plantRarity = int.Parse(currentPlantInfo[1]);
+    string plantName = currentPlant[0];
+    int currentRarity = int.Parse(currentPlant[1]);
 
     if (!plants.ContainsKey(plantName))
     {
-        plants[plantName] = new PlantInfo(plantRarity, 0, 0);
+        plants[plantName] = new PlantInformation(currentRarity, 0, 0);
+        continue;
     }
-    else
-    {
-        plants[plantName].Rarity = plantRarity;
-    }
+
+    plants[plantName].Rarity = currentRarity;
 }
 
 while (true)
 {
-    string[] currentCommand = Console.ReadLine()
-        .Split(": ", StringSplitOptions.RemoveEmptyEntries)
-        .ToArray();
+    string[] command = Console.ReadLine()
+        .Split(": ", StringSplitOptions.RemoveEmptyEntries);
 
-    if (currentCommand[0] == "Exhibition")
+    if (command[0] == "Exhibition")
     {
         break;
     }
-    else if (currentCommand[0] == "Rate")
+    else if (command[0] == "Rate")
     {
-        string[] nameAndRatingCombined = currentCommand[1]
-            .Split(" - ")
-            .ToArray();
-        string currentPlantName = nameAndRatingCombined[0];
-        double currentPlantRating = double.Parse(nameAndRatingCombined[1]);
+        string[] plantInformation = command[1].Split(" - ", StringSplitOptions.RemoveEmptyEntries);
+        string plantName = plantInformation[0];
 
-        if (plants.ContainsKey(currentPlantName))
+        if (plants.ContainsKey(plantName))
         {
-            plants[currentPlantName].Rating += currentPlantRating;
-            plants[currentPlantName].RateCounter++;
+            int plantRating = int.Parse(plantInformation[1]);
+            plants[plantName].Rating += plantRating;
+            plants[plantName].RatingCounter++;
             continue;
         }
-        else
-        {
-            Console.WriteLine("error");
-        }
+        Console.WriteLine("error");
     }
-    else if (currentCommand[0] == "Update")
+    else if (command[0] == "Update")
     {
-        string[] nameAndRarityCombined = currentCommand[1]
-            .Split(" - ")
-            .ToArray();
+        string[] plantInformation = command[1].Split(" - ", StringSplitOptions.RemoveEmptyEntries);
+        string plantName = plantInformation[0];
 
-        string currentPlantName = nameAndRarityCombined[0];
-        int currentPlantRarity = int.Parse(nameAndRarityCombined[1]);
-
-        if (plants.ContainsKey(currentPlantName))
+        if (plants.ContainsKey(plantName))
         {
-            plants[currentPlantName].Rarity = currentPlantRarity;
+            int newRarity = int.Parse(plantInformation[1]);
+            plants[plantName].Rarity = newRarity;
             continue;
         }
-        else
-        {
-            Console.WriteLine("error");
-        }
+        Console.WriteLine("error");
     }
-    else if (currentCommand[0] == "Reset")
+    else if (command[0] == "Reset")
     {
-        string currentPlantName = currentCommand[1];
+        string[] plantInformation = command[1].Split(" - ", StringSplitOptions.RemoveEmptyEntries);
+        string plantName = plantInformation[0];
 
-        if (plants.ContainsKey(currentPlantName))
+        if (plants.ContainsKey(plantName))
         {
-            plants[currentPlantName].Rating = 0;
-            plants[currentPlantName].RateCounter = 0;
+            plants[plantName].Rating = 0;
+            plants[plantName].RatingCounter = 0;
             continue;
         }
-        else
-        {
-            Console.WriteLine("error");
-        }
+        Console.WriteLine("error");
     }
 }
-
 Console.WriteLine("Plants for the exhibition:");
 foreach (var plant in plants)
 {
-    if (plant.Value.Rating == 0)
+    if (plant.Value.RatingCounter == 0)
     {
         Console.WriteLine($"- {plant.Key}; Rarity: {plant.Value.Rarity}; Rating: {plant.Value.Rating:f2}");
     }
     else
     {
-        Console.WriteLine($"- {plant.Key}; Rarity: {plant.Value.Rarity}; Rating: {plant.Value.Rating / plant.Value.RateCounter:f2}");
+        Console.WriteLine($"- {plant.Key}; Rarity: {plant.Value.Rarity}; Rating: {plant.Value.Rating / plant.Value.RatingCounter:f2}");
     }
 }
 
 
-public class PlantInfo
+class PlantInformation
 {
-    public PlantInfo(int rarity, double rating, int rateCounter)
+    public PlantInformation(int rarity, double rating, int ratingCounter)
     {
         Rarity = rarity;
         Rating = rating;
-        RateCounter = rateCounter;
+        RatingCounter = ratingCounter;
     }
 
     public int Rarity { get; set; }
 
     public double Rating { get; set; }
 
-    public int RateCounter { get; set; }
+    public int RatingCounter { get; set; }
 }
