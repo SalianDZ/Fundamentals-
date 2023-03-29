@@ -1,6 +1,4 @@
-﻿string startingLocations = Console.ReadLine();
-List<char> locationsInChars = new List<char>();
-locationsInChars.AddRange(startingLocations);
+﻿string destinations = Console.ReadLine();
 
 while (true)
 {
@@ -9,43 +7,47 @@ while (true)
 
     if (command[0] == "Travel")
     {
-        Console.WriteLine($"Ready for world tour! Planned stops: {String.Join("", locationsInChars)}");
         break;
     }
     else if (command[0] == "Add Stop")
     {
         int index = int.Parse(command[1]);
-        string currentString = command[2];
 
-        if (index >= 0 && index < locationsInChars.Count)
+        //A change in the bounds of the index is possible!!!
+        if (index >= 0 && index < destinations.Length)
         {
-            locationsInChars.InsertRange(index, currentString);
+            string stop = command[2];
+            destinations = destinations.Insert(index, stop);
+            Console.WriteLine(destinations);
+            continue;
         }
-        Console.WriteLine(String.Join("", locationsInChars));
+        Console.WriteLine(destinations);
     }
     else if (command[0] == "Remove Stop")
     {
-        int startIndex = int.Parse(command[1]);
-        int endIndex = int.Parse(command[2]);
+        int startIndex =int.Parse(command[1]);
+        int endIndex =int.Parse(command[2]);
 
-        if (startIndex >=0 && endIndex < locationsInChars.Count)
+        //A change in the bounds of the index is possible!!!
+        if (startIndex >= 0 && endIndex < destinations.Length)
         {
-            locationsInChars.RemoveRange(startIndex, (endIndex - startIndex + 1));
+            destinations = destinations.Remove(startIndex, ((endIndex - startIndex) + 1));
+            Console.WriteLine(destinations);
+            continue;
         }
-        Console.WriteLine(String.Join("", locationsInChars));
+        Console.WriteLine(destinations);
     }
     else if (command[0] == "Switch")
     {
-        string oldString = command[1];
-        string newString = command[2];
-        int indexOfOldString = locationsInChars.IndexOf(oldString[0]);
-
-        if (new string(locationsInChars.ToArray()).Contains(oldString))
+        string oldString =command[1];
+        string newString =command[2];
+        if (destinations.Contains(oldString))
         {
-            locationsInChars.InsertRange(indexOfOldString, newString);
-            indexOfOldString = locationsInChars.IndexOf(oldString[0]);
-            locationsInChars.RemoveRange(indexOfOldString, oldString.Length);
+            destinations = destinations.Replace(oldString, newString);
+            Console.WriteLine(destinations);
+            continue;
         }
-        Console.WriteLine(String.Join("", locationsInChars));
+        Console.WriteLine(destinations);
     }
 }
+Console.WriteLine($"Ready for world tour! Planned stops: {destinations}");
