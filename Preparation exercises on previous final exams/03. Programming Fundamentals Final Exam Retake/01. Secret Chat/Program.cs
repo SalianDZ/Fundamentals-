@@ -1,14 +1,9 @@
-﻿using System.Linq;
-
-string message = Console.ReadLine();
-List<char> messageInChars = new List<char>();
-messageInChars.AddRange(message);
+﻿string secretMessage = Console.ReadLine();
 
 while (true)
 {
     string[] command = Console.ReadLine()
-        .Split(":|:", StringSplitOptions.RemoveEmptyEntries)
-        .ToArray();
+        .Split(":|:", StringSplitOptions.RemoveEmptyEntries);
 
     if (command[0] == "Reveal")
     {
@@ -17,23 +12,22 @@ while (true)
     else if (command[0] == "InsertSpace")
     {
         int index = int.Parse(command[1]);
-        messageInChars.Insert(index, ' ');
-        Console.WriteLine(string.Join("", messageInChars));
+        secretMessage = secretMessage.Insert(index, " ");
+        Console.WriteLine(secretMessage);
     }
     else if (command[0] == "Reverse")
     {
         string substring = command[1];
-        string tempChar =  new string(messageInChars.ToArray());
+        int indexOfSubstring = secretMessage.IndexOf(substring);
 
-        if (tempChar.Contains(substring))
+        if (secretMessage.Contains(substring))
         {
-            int substringIndex = tempChar.IndexOf(substring);
-            messageInChars.RemoveRange(substringIndex, substring.Length);
-            char[] substringChar = substring.ToCharArray();
-            Array.Reverse(substringChar);
-            string reversedSubstring = new string(substringChar);
-            messageInChars.AddRange(reversedSubstring);
-            Console.WriteLine(string.Join("", messageInChars));
+            secretMessage = secretMessage.Remove(indexOfSubstring, substring.Length);
+            char[] charArray = substring.ToCharArray();
+            Array.Reverse(charArray);
+            string reversedSubstring = new string(charArray);
+            secretMessage = secretMessage.Insert((secretMessage.Length), reversedSubstring);
+            Console.WriteLine(secretMessage);
         }
         else
         {
@@ -43,16 +37,12 @@ while (true)
     else if (command[0] == "ChangeAll")
     {
         string substring = command[1];
-        string replacement = command[2];
-        string tempChar = new string(messageInChars.ToArray());
-
-        if (tempChar.Contains(substring))
+        string replacement =command[2];
+        if (secretMessage.Contains(substring))
         {
-            tempChar = tempChar.Replace(substring, replacement);
-            messageInChars.Clear();
-            messageInChars.AddRange(tempChar);
-            Console.WriteLine(string.Join("", messageInChars));
+            secretMessage = secretMessage.Replace(substring, replacement);
         }
+        Console.WriteLine(secretMessage);
     }
 }
-Console.WriteLine($"You have a new text message: {string.Join("", messageInChars)}");
+Console.WriteLine($"You have a new text message: {secretMessage}");
