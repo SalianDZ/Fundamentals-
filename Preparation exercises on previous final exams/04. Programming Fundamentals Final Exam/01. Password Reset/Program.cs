@@ -1,42 +1,43 @@
-﻿string password = Console.ReadLine();
+﻿using System.Text;
+
+string password = Console.ReadLine();
 
 while (true)
 {
-    string[] currentCommand = Console.ReadLine()
+    string[] command = Console.ReadLine()
         .Split(" ", StringSplitOptions.RemoveEmptyEntries);
 
-    if (currentCommand[0] == "Done")
+    if (command[0] == "Done")
     {
         break;
     }
-    else if (currentCommand[0] == "TakeOdd")
+    else if (command[0] == "TakeOdd")
     {
-        string tempPassword = string.Empty;
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < password.Length; i++)
         {
             if (i % 2 != 0)
             {
-                tempPassword += password[i];
+                sb.Append(password[i]);
             }
         }
-        password = tempPassword;
+        password = sb.ToString();
         Console.WriteLine(password);
     }
-    else if (currentCommand[0] == "Cut")
+    else if (command[0] == "Cut")
     {
-        int index = int.Parse(currentCommand[1]);
-        int length = int.Parse(currentCommand[2]);
+        int index = int.Parse(command[1]);
+        int length = int.Parse(command[2]);
 
         password = password.Remove(index, length);
         Console.WriteLine(password);
     }
-    else if (currentCommand[0] == "Substitute")
+    else if (command[0] == "Substitute")
     {
-        string substring = currentCommand[1];
-        string substitude = currentCommand[2];
-
+        string substring = command[1];
         if (password.Contains(substring))
         {
+            string substitude = command[2];
             password = password.Replace(substring, substitude);
             Console.WriteLine(password);
         }

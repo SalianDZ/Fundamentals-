@@ -1,31 +1,31 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Text;
+using System.Text.RegularExpressions;
 
 string pattern = @"(\@)#+(?<name>[A-Z][A-Za-z\d]{4,}[A-Z])\1#+";
 int n = int.Parse(Console.ReadLine());
-bool hasDigits = false;
 
 for (int i = 0; i < n; i++)
 {
-    string currentText = Console.ReadLine();
-    Match currentMatch = Regex.Match(currentText, pattern);
+    string text = Console.ReadLine();
+    Match match = Regex.Match(text, pattern);
+    bool hasDigit = false;
+    string number = string.Empty;
 
-    if (currentMatch.Success)
+    if (match.Success)
     {
-        string group = string.Empty;
-        string currentMatchAsString = currentMatch.Value;
-
-        for (int j = 0; j < currentMatch.Length; j++)
+        for (int j = 0; j < text.Length; j++)
         {
-            if (char.IsDigit(currentMatchAsString[j]))
+            if (char.IsDigit(text[j]))
             {
-                hasDigits = true;
-                group += currentMatchAsString[j];
+                number += text[j];
+                hasDigit = true;
             }
         }
 
-        if (hasDigits)
+        if (hasDigit)
         {
-            Console.WriteLine($"Product group: {group}");
+            int currentNumber = int.Parse(number);
+            Console.WriteLine($"Product group: {currentNumber}");
         }
         else
         {
@@ -36,5 +36,4 @@ for (int i = 0; i < n; i++)
     {
         Console.WriteLine("Invalid barcode");
     }
-    hasDigits = false;
 }
