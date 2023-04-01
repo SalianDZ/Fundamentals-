@@ -1,33 +1,36 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Text;
 using System.Text.RegularExpressions;
 
-string pattern = @"(\:\:|\*\*)([A-Z][a-z]{2,})\1";
+string numberPattern = @"\d";
 string text = Console.ReadLine();
-int coolThreshold = 1;
+long coolness = 1;
 
-foreach (char digit in text)
+MatchCollection numbers = Regex.Matches(text, numberPattern);
+
+foreach (Match number in numbers)
 {
-	if (char.IsDigit(digit))
+    coolness *= int.Parse(number.Value);
+}
+
+string pattern = @"(\:\:|\*\*)(?<emoji>[A-Z][a-z]{2,})\1";
+MatchCollection emojis = Regex.Matches(text, pattern);
+List<string> coolEmojis = new List<string>();
+foreach (Match emoji in emojis)
+{
+	int currentSum = 0;
+	for (int i = 0; i < emoji.Groups["emoji"].Value.Length; i++)
 	{
-		int currentDigit = int.Parse(digit.ToString());
-		coolThreshold *= currentDigit;
+		currentSum += emoji.Groups["emoji"].Value[i];
+	}
+	if (currentSum > coolness)
+	{
+		coolEmojis.Add(emoji.Value);
 	}
 }
 
-MatchCollection emojis = Regex.Matches(text, pattern);
-Console.WriteLine($"Cool threshold: {coolThreshold}");
+Console.WriteLine($"Cool threshold: {coolness}");
 Console.WriteLine($"{emojis.Count} emojis found in the text. The cool ones are:");
-
-foreach (Match match in emojis)
+foreach (var emoji in coolEmojis)
 {
-	int currentMatchValue = 0;
-    foreach (char item in match.Groups[2].Value)
-    {
-        currentMatchValue += item;
-    }
-
-    if (currentMatchValue >= coolThreshold)
-    {
-        Console.WriteLine(match.Value);
-    }
+	Console.WriteLine(emoji);
 }

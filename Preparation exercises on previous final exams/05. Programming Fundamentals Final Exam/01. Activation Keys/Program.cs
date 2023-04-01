@@ -1,12 +1,9 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-
-string activationKey = Console.ReadLine();
+﻿string key = Console.ReadLine();
 
 while (true)
 {
     string[] command = Console.ReadLine()
-        .Split(">>>").ToArray();
+        .Split(">>>", StringSplitOptions.RemoveEmptyEntries);
 
     if (command[0] == "Generate")
     {
@@ -15,9 +12,10 @@ while (true)
     else if (command[0] == "Contains")
     {
         string substring = command[1];
-        if (activationKey.Contains(substring))
+
+        if (key.Contains(substring))
         {
-            Console.WriteLine($"{activationKey} contains {substring}");
+            Console.WriteLine($"{key} contains {substring}");
         }
         else
         {
@@ -26,30 +24,31 @@ while (true)
     }
     else if (command[0] == "Flip")
     {
-        string part = command[1];
-        int startIndex = int.Parse(command[2]);
-        int endIndex = int.Parse(command[3]);
-        string substring = activationKey.Substring(startIndex, (endIndex - startIndex));
-        if (part == "Upper")
+        if (command[1] == "Upper")
         {
-            string upperSubstring = substring.ToUpper();
-            activationKey = activationKey.Replace(substring, upperSubstring);
+            int startIndex = int.Parse(command[2]);
+            int endIndex = int.Parse(command[3]);
+            string substring = key.Substring(startIndex, endIndex - startIndex);
+            string newSubstring = substring.ToUpper();
+            key = key.Replace(substring, newSubstring);
+            Console.WriteLine(key);
         }
-        else if (part == "Lower")
+        else
         {
-            string lowerSubstring = substring.ToLower();
-            activationKey = activationKey.Replace(substring, lowerSubstring);
+            int startIndex = int.Parse(command[2]);
+            int endIndex = int.Parse(command[3]);
+            string substring = key.Substring(startIndex, endIndex - startIndex);
+            string newSubstring = substring.ToLower();
+            key = key.Replace(substring, newSubstring);
+            Console.WriteLine(key);
         }
-
-        Console.WriteLine(activationKey);
     }
     else if (command[0] == "Slice")
     {
         int startIndex = int.Parse(command[1]);
         int endIndex = int.Parse(command[2]);
-
-        activationKey = activationKey.Remove(startIndex, (endIndex - startIndex));
-        Console.WriteLine(activationKey);
+        key = key.Remove(startIndex, endIndex - startIndex);
+        Console.WriteLine(key);
     }
 }
-Console.WriteLine($"Your activation key is: {activationKey}");
+Console.WriteLine($"Your activation key is: {key}");
